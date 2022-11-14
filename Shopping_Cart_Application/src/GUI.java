@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import javax.swing.border.LineBorder;
+import javax.swing.ListSelectionModel;
 
 public class GUI {
 
@@ -164,9 +165,9 @@ public class GUI {
 		ItemBPanel.add(lblNewLabel_2_1);
 		
 		ProductList = new JTable();
+		ProductList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ProductList.setFillsViewportHeight(true);
 		ProductList.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		ProductList.setCellSelectionEnabled(true);
 		ProductList.setBounds(298, 21, 233, 243);
 		panel.add(ProductList);
 		
@@ -202,6 +203,19 @@ public class GUI {
 		ItemAPanel_4.setBounds(143, 226, 85, 86);
 		panel.add(ItemAPanel_4);
 		
+		JButton btnRemoveItem = new JButton("Remove Item");
+		btnRemoveItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			//	JOptionPane.showMessageDialog(null,	ProductList.getSelectedRow());
+				listmodel.removeRow(ProductList.getSelectedRow());
+				ProductList.setModel(listmodel);
+			}
+		});
+		btnRemoveItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnRemoveItem.setBounds(378, 275, 159, 37);
+		panel.add(btnRemoveItem);
+		
 		
 		// this controls the onscreen button for Item A in the actual program this would be dynamically created 
 					// I would also dynamically create the GUI objects on screen allowing it to scale to the size of the 
@@ -218,6 +232,7 @@ public class GUI {
 			GUIObjects[K].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					
 					Add_To_Cart(arr[selitem][0], arr[selitem][1]);
 				
 				}
@@ -238,11 +253,11 @@ public class GUI {
 				{
 					// first it finds the flat sub total of the selected items without any savings 
 				total = 0;
-				costings.forEach( (value) -> {
+				//costings.forEach( (value) -> {
 				
-					total += value;
-				});
-				SubTotal.setText((Decimalformat.format(total)));
+				//	total += value;
+			//	});
+				
 				
 				
 				
@@ -255,7 +270,7 @@ public class GUI {
 				for(int i = 0; i < (listmodel.getRowCount()); i++)
 				{
 					
-					
+					total =  Double.parseDouble((String) listmodel.getValueAt(i, 1));
 					// use a switch statement as the counter
 					// count and store the number of each item
 					Object selitem = listmodel.getValueAt(i,0);
@@ -278,7 +293,7 @@ public class GUI {
 					break;
 				}
 				}
-				
+				SubTotal.setText((Decimalformat.format(total)));
 				// calculate savings  using selection statements this  would be best to be pulled from a database instead of 
 				// hard coded 
 				
